@@ -24,21 +24,19 @@ gem 'grape-middleware-logger'
 ```ruby
 class API < Grape::API
   # @note Make sure this above you're first +mount+
-  use Grape::Middleware::Logger
+  use Grape::Middleware::Lograge
 end
 ```
 
 Server requests will be logged to STDOUT by default.
 
 ## Custom setup
-Customize the logging by passing the `logger` option. Example using a CustomLogger and parameter sanitization:
+Customize the logging by passing the `filter` option. Example using parameter sanitization:
 ```ruby
-use Grape::Middleware::Logger, {
-  logger: CustomLogger.new,
+use Grape::Middleware::Lograge, {
   filter: CustomFilter.new
 }
 ```
-The `logger` option can be any object that responds to `.info(msg)`
 
 The `filter` option can be any object that responds to `.filter(params_hash)`
 
@@ -60,32 +58,7 @@ Completed 422 in 6.29ms
 ```
 
 ## Using Rails?
-`Rails.logger` and `Rails.application.config.filter_parameters` will be used automatically as the default logger and 
-param filterer, respectively.
-
-You may want to disable Rails logging for API endpoints, so that the logging doesn't double-up. You can achieve this 
-by switching around some middleware. For example:
-
-```ruby
-# config/application.rb
-config.middleware.delete 'Rails::Rack::Logger'
-config.middleware.insert_after 'ActionDispatch::RequestId', 'SelectiveLogger'
-
-# config/initializers/selective_logger.rb
-class SelectiveLogger
-  def initialize(app)
-    @app = app
-  end
-
-  def call(env)
-    if env['PATH_INFO'] =~ %r{^/api}
-      @app.call(env)
-    else
-      Rails::Rack::Logger.new(@app).call(env)
-    end
-  end
-end
-```
+`Rails.application.config.filter_parameters` will be used automatically as the default param filterer.
 
 ## Rack
 
@@ -93,13 +66,14 @@ If you're using the `rackup` command to run your server in development, pass the
 
 ## Credits
 
+This code is forked from [grape-middleware-logger](https://github.com/ridiculous/grape-middleware-logger)
 Big thanks to jadent's question/answer on [stackoverflow](http://stackoverflow.com/questions/25048163/grape-using-error-and-grapemiddleware-after-callback)
 for easily logging error responses. Borrowed some motivation from the [grape_logging](https://github.com/aserafin/grape_logging) gem
 and would love to see these two consolidated at some point.
 
 ## Contributing
 
-1. Fork it ( https://github.com/ridiculous/grape-middleware-logger/fork )
+1. Fork it ( https://github.com/tchak/grape-middleware-lograge/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
