@@ -66,7 +66,8 @@ If you're using the `rackup` command to run your server in development, pass the
 
 ## Credits
 
-This code is forked from [grape-middleware-logger](https://github.com/ridiculous/grape-middleware-logger)
+This code is forked from [grape-middleware-logger](https://github.com/ridiculous/grape-middleware-logger).
+
 Big thanks to jadent's question/answer on [stackoverflow](http://stackoverflow.com/questions/25048163/grape-using-error-and-grapemiddleware-after-callback)
 for easily logging error responses. Borrowed some motivation from the [grape_logging](https://github.com/aserafin/grape_logging) gem
 and would love to see these two consolidated at some point.
