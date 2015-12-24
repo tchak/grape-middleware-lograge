@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Grape::Middleware::Logger do
+describe Grape::Middleware::Lograge do
   let(:app) { double('app') }
   let(:options) { { filter: build(:param_filter), logger: Object.new } }
 
@@ -17,7 +17,7 @@ describe Grape::Middleware::Logger do
       it 'calls +after_failure+ and rethrows the error' do
         expect(app).to receive(:call).with(env).and_throw(:error, error)
         expect(subject).to receive(:before)
-        expect(subject).to receive(:after_failure).with(error)
+        expect(subject).to receive(:after_failure).with(hash_including(method: 'POST'), error)
         expect(subject).to receive(:throw).with(:error, error)
         subject.call!(env)
       end
@@ -26,8 +26,8 @@ describe Grape::Middleware::Logger do
     context 'when there is no error' do
       it 'calls +after+ with the correct status' do
         expect(app).to receive(:call).with(env).and_return(app_response)
-        expect(subject).to receive(:before)
-        expect(subject).to receive(:after).with(200)
+        expect(subject).to receive(:before).and_call_original
+        expect(subject).to receive(:after).with(hash_including(method: 'POST'), 200)
         subject.call!(env)
       end
 
@@ -44,8 +44,8 @@ describe Grape::Middleware::Logger do
 
       it 'calls +after+ with the correct status' do
         expect(app).to receive(:call).with(env).and_return(app_response)
-        expect(subject).to receive(:before)
-        expect(subject).to receive(:after).with(401)
+        expect(subject).to receive(:before).and_call_original
+        expect(subject).to receive(:after).with(hash_including(method: 'POST'), 401)
         subject.call!(env)
       end
 
@@ -60,19 +60,24 @@ describe Grape::Middleware::Logger do
 
   describe '#after_failure' do
     let(:error) { { status: 403 } }
+    let(:payload) { {} }
 
     it 'calls +after+ with the :status' do
-      expect(subject).to receive(:after).with(403)
-      subject.after_failure(error)
+      expect(subject).to receive(:after).with(payload, 403).and_call_original
+      expect(subject).to receive(:env).twice.and_return(env)
+      subject.after_failure(payload, error)
+      expect(payload[:status]).to eq(403)
     end
 
     context 'when :message is set in the error object' do
       let(:error) { { message: 'Oops, not found' } }
 
       it 'logs the error message' do
-        allow(subject).to receive(:after)
-        expect(subject.logger).to receive(:info).with(Regexp.new(error[:message]))
-        subject.after_failure(error)
+        pending('implement error messages')
+        expect(subject).to receive(:after).with(payload, nil).and_call_original
+        expect(subject).to receive(:env).twice.and_return(env)
+        subject.after_failure(payload, error)
+        expect(payload[:message]).to match(Regexp.new(error[:message]))
       end
     end
   end

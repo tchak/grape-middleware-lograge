@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'ostruct'
 require 'factory_girl'
-require 'grape/middleware/logger'
+require 'grape/middleware/lograge'
 
 FactoryGirl.find_definitions
 
