@@ -1,4 +1,6 @@
 require 'grape'
+require 'lograge'
+require 'lograge/formatters/rails_logger'
 
 class Grape::Middleware::Lograge < Grape::Middleware::Globals
   BACKSLASH = '/'.freeze
@@ -9,6 +11,18 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
 
   class << self
     attr_accessor :filter
+
+    def custom_options
+      -> (event) {
+        {
+          params:     event.payload[:params],
+          user_agent: event.payload[:user_agent],
+          request_id: event.payload[:request_id],
+          remote_ip:  event.payload[:remote_ip],
+          version:    event.payload[:version]
+        }
+      }
+    end
   end
 
   def initialize(_, options = {})
@@ -86,7 +100,7 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
   def raw_payload
     {
       params:     parameters.merge(
-        'action' => action_name || 'index',
+        'action' => action_name.empty? ? 'index' : action_name,
         'controller' => controller
       ),
       method:     env[Grape::Env::GRAPE_REQUEST].request_method,
