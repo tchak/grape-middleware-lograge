@@ -17,21 +17,29 @@ module Lograge
 
         lines = []
 
+        lines << started_request_message(data)
         lines << "Processing by #{data[:controller]}##{data[:action]} as #{format}"
         lines << "  Parameters: #{params.inspect}" unless params.empty?
 
         lines
       end
 
+      def started_request_message(data)
+        'Started %s "%s" for %s at %s' % [
+          data[:method],
+          data[:path],
+          data[:remote_ip],
+          Time.now.to_default_s ]
+      end
+
       def completed(data)
         status = data[:status]
-
-        puts ActionDispatch::ExceptionWrapper.rescue_responses
+        duration = data[:duration].round
 
         if data[:error]
-          "Exception #{status} #{data[:error]} after #{data[:duration].round}ms"
+          "Error #{status} #{data[:error]} after #{duration}ms"
         else
-          "Completed #{status} #{Rack::Utils::HTTP_STATUS_CODES[status]} in #{data[:duration].round}ms"
+          "Completed #{status} #{Rack::Utils::HTTP_STATUS_CODES[status]} in #{duration}ms"
         end
       end
     end
