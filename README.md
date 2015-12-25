@@ -1,4 +1,4 @@
-# A logger for Grape apps
+# A logger for Grape apps that uses [Lograge](https://github.com/roidrage/lograge)
 [![Code Climate](https://codeclimate.com/github/tchak/grape-middleware-lograge/badges/gpa.svg)](https://codeclimate.com/github/tchak/grape-middleware-lograge) [![Gem Version](https://badge.fury.io/rb/grape-middleware-lograge.svg)](http://badge.fury.io/rb/grape-middleware-lograge)
 [![Build Status](https://travis-ci.org/tchak/grape-middleware-lograge.svg)](https://travis-ci.org/tchak/grape-middleware-lograge)
 
@@ -17,7 +17,7 @@ Add this line to your application's Gemfile:
 
 ```ruby
 gem 'grape', '>= 0.14.0'
-gem 'grape-middleware-logger'
+gem 'grape-middleware-lograge'
 ```
 
 ## Usage
