@@ -1,6 +1,6 @@
 # A logger for Grape apps
-[![Code Climate](https://codeclimate.com/github/ridiculous/grape-middleware-logger/badges/gpa.svg)](https://codeclimate.com/github/ridiculous/grape-middleware-logger) [![Gem Version](https://badge.fury.io/rb/grape-middleware-logger.svg)](http://badge.fury.io/rb/grape-middleware-logger)
-[![Build Status](https://travis-ci.org/ridiculous/grape-middleware-logger.svg)](https://travis-ci.org/ridiculous/grape-middleware-logger)
+[![Code Climate](https://codeclimate.com/github/tchak/grape-middleware-lograge/badges/gpa.svg)](https://codeclimate.com/github/tchak/grape-middleware-lograge) [![Gem Version](https://badge.fury.io/rb/grape-middleware-lograge.svg)](http://badge.fury.io/rb/grape-middleware-lograge)
+[![Build Status](https://travis-ci.org/tchak/grape-middleware-lograge.svg)](https://travis-ci.org/tchak/grape-middleware-lograge)
 
 Logs:
   * Request path
