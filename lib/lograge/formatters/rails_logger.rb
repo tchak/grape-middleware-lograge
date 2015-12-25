@@ -39,7 +39,15 @@ module Lograge
         if data[:error]
           "Error #{status} #{data[:error]} after #{duration}ms"
         else
-          "Completed #{status} #{Rack::Utils::HTTP_STATUS_CODES[status]} in #{duration}ms"
+          lines = []
+          additions = []
+
+          additions << "ActiveRecord: %.1fms" % data[:db].to_f
+
+          lines << "Completed #{status} #{Rack::Utils::HTTP_STATUS_CODES[status]} in #{duration}ms"
+          lines << " (#{additions.join(" | ")})" unless additions.blank?
+
+          lines.join("\n")
         end
       end
     end
