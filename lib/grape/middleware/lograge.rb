@@ -78,7 +78,9 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
     payload[:exception] = [class_name, e.message]
     payload[:backtrace] = e.backtrace
 
-    ActionDispatch::ExceptionWrapper.rescue_responses[class_name] = STATUS_CODE_TO_SYMBOL[status]
+    unless ActionDispatch::ExceptionWrapper.rescue_responses[class_name].present?
+      ActionDispatch::ExceptionWrapper.rescue_responses[class_name] = STATUS_CODE_TO_SYMBOL[status]
+    end
   end
 
   def after_failure(payload, error)
