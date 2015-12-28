@@ -11,18 +11,6 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
 
   class << self
     attr_accessor :filter
-
-    def custom_options
-      -> (event) {
-        {
-          params:     event.payload[:params],
-          user_agent: event.payload[:user_agent],
-          request_id: event.payload[:request_id],
-          remote_ip:  event.payload[:remote_ip],
-          version:    event.payload[:version]
-        }
-      }
-    end
   end
 
   def initialize(_, options = {})
