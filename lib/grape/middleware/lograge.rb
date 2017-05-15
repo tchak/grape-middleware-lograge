@@ -30,7 +30,9 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
     end
 
     def finish(name, id, payload)
-      @db_duration += 1000.0 * (Time.now - @start)
+      if @start
+        @db_duration += 1000.0 * (Time.now - @start)
+      end
     end
   end
 
