@@ -18,15 +18,32 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
     @options[:filter] ||= self.class.filter
   end
 
+  class SQLSubscriber
+    attr_reader :db_duration
+
+    def initialize
+      @db_duration = 0
+    end
+
+    def start(name, id, payload)
+      @start = Time.now
+    end
+
+    def finish(name, id, payload)
+      if @start
+        @db_duration += 1000.0 * (Time.now - @start)
+      end
+    end
+  end
+
   def before
     super
 
-    @db_duration = 0
+    @sql_subscriber = SQLSubscriber.new
 
-    @db_subscription = ActiveSupport::Notifications.subscribe('sql.active_record') do |*args|
-      event = ActiveSupport::Notifications::Event.new(*args)
-      @db_duration += event.duration
-    end if defined?(ActiveRecord)
+    if defined?(ActiveRecord)
+      @db_subscription = ActiveSupport::Notifications.subscribe('sql.active_record', @sql_subscriber)
+    end
 
     ActiveSupport::Notifications.instrument("start_processing.grape", raw_payload)
   end
@@ -66,7 +83,7 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
     payload[:status]     = status
     payload[:format]     = env['api.format']
     payload[:version]    = env['api.version']
-    payload[:db_runtime] = @db_duration
+    payload[:db_runtime] = @sql_subscriber.try(:db_duration)
   end
 
   def after_exception(payload, e)
