@@ -24,6 +24,7 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
     @db_duration = 0
 
     @db_subscription = ActiveSupport::Notifications.subscribe('sql.active_record') do |*args|
+      args[1] ||= Time.now # occasionally the start time is nil and will cause errors in Event
       event = ActiveSupport::Notifications::Event.new(*args)
       @db_duration += event.duration
     end if defined?(ActiveRecord)
