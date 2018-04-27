@@ -24,7 +24,7 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
     @db_duration = 0
 
     @db_subscription = ActiveSupport::Notifications.subscribe('sql.active_record') do |name, start, ending, transaction_id, payload|
-      @db_duration += 1000.0 * ending - start if ending && start
+      @db_duration += 1000.0 * (ending - start) if ending && start
     end if defined?(ActiveRecord)
 
     ActiveSupport::Notifications.instrument("start_processing.grape", raw_payload)
