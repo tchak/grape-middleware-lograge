@@ -23,7 +23,7 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
 
     @db_runtime = 0
 
-    @db_subscription = ActiveSupport::Notifications.subscribe('sql.active_record') do |name, start, ending, transaction_id, payload|
+    @db_subscription = ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, ending, _transaction_id, _payload|
       @db_runtime += 1000.0 * (ending - start) if ending && start
     end if defined?(ActiveRecord)
 
@@ -62,6 +62,7 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
   end
 
   def after(payload, status)
+    ActiveSupport::Notifications.unsubscribe(@db_subscription) if @db_subscription
     payload[:status]     = status
     payload[:format]     = env['api.format']
     payload[:version]    = env['api.version']
