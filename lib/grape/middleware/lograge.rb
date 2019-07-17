@@ -97,7 +97,7 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
     #
     # env[Grape::Env::GRAPE_REQUEST].body is a String::IO object, read it until something is
     # there, then store it for the rest of the request cycle:
-    @body_string    = env[Grape::Env::GRAPE_REQUEST].body.read() unless @request_body.present?
+    @body_string    = env[Grape::Env::GRAPE_REQUEST].body.read() unless @body_string.present?
     @request_body_params ||= begin
       JSON.parse( @body_string  )
     rescue
