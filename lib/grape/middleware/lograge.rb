@@ -92,6 +92,19 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
   def parameters
     request_params = env[Grape::Env::GRAPE_REQUEST_PARAMS].to_hash
     request_params.merge!(env['action_dispatch.request.request_parameters'.freeze] || {}) # for Rails
+
+    # Merge the parameters sent in the request body the same as the GET params.
+    #
+    # env[Grape::Env::GRAPE_REQUEST].body is a String::IO object, read it until something is
+    # there, then store it for the rest of the request cycle:
+    @body_string    = env[Grape::Env::GRAPE_REQUEST].body.read() unless @request_body.present?
+    @request_body_params ||= begin
+      JSON.parse( @body_string  )
+    rescue
+      { body: @body_string }
+    end
+    request_params.merge!(@request_body_params) if @request_body_params.present?
+
     if @options[:filter]
       @options[:filter].filter(request_params)
     else
