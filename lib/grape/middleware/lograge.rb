@@ -123,6 +123,10 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
     }
   end
 
+  def request
+    env[Grape::Env::GRAPE_REQUEST]
+  end
+
   def endpoint
     env[Grape::Env::API_ENDPOINT]
   end
