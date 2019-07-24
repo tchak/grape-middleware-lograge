@@ -59,11 +59,13 @@ class Grape::Middleware::Lograge < Grape::Middleware::Globals
 
       # Parse request parameters from the PUT/POST body and include them in the params payload
       body   = env[Grape::Env::API_REQUEST_INPUT]
-      fmt    = request.media_type ? mime_types[request.media_type] : options[:default_format]
-      parser = Grape::Parser.parser_for fmt
-      if content_type_for(fmt)
-        body_params = parser.call(body, env)
-        payload[:params].merge!(body_params)
+      if body.present?
+        fmt    = request.media_type ? mime_types[request.media_type] : options[:default_format]
+        parser = Grape::Parser.parser_for fmt
+        if content_type_for(fmt)
+          body_params = parser.call(body, env)
+          payload[:params].merge!(body_params)
+        end
       end
 
       @app_response

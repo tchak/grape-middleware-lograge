@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = 'grape-middleware-lograge'
-  spec.version       = '1.2.8'
+  spec.version       = '1.2.9'
   spec.platform      = Gem::Platform::RUBY
   spec.authors       = ['Ryan Buckley', 'Paul Chavard','Josh Buermann']
   spec.email         = ['arebuckley@gmail.com', 'paul+github@chavard.net','buermann@gmail.com']
