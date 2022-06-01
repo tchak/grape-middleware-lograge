@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = 'grape-middleware-lograge'
-  spec.version       = '1.3.1'
+  spec.version       = '1.3.2'
   spec.platform      = Gem::Platform::RUBY
   spec.authors       = ['Ryan Buckley', 'Paul Chavard']
   spec.email         = ['arebuckley@gmail.com', 'paul+github@chavard.net']
@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'grape', '~> 1.0'
-  spec.add_dependency 'lograge', '~> 0.11.0'
+  spec.add_dependency 'lograge', '~> 0.12'
 
   spec.add_development_dependency 'bundler', '~> 2.1'
   spec.add_development_dependency 'rake', '~> 10.0'
