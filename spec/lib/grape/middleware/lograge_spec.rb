@@ -53,7 +53,7 @@ describe Grape::Middleware::Lograge do
         expect(app).to receive(:call).with(env).and_return(app_response)
         allow(subject).to receive(:before)
         allow(subject).to receive(:after)
-        expect(subject.call!(env)).to eq app_response
+        expect(subject.call!(env).to_a).to eq app_response
       end
     end
   end
