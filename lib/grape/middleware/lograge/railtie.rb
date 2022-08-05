@@ -4,6 +4,10 @@ class Grape::Middleware::Lograge::Railtie < Rails::Railtie
 
     Grape::Middleware::Lograge.filter = filter_class.new(Rails.application.config.filter_parameters)
 
-    ::Lograge::RequestLogSubscriber.attach_to :grape
+    if Gem::Version.new( Lograge::VERSION ) > Gem::Version.new('0.10.9')
+      Lograge::LogSubscribers::Base.attach_to :grape
+    else
+      ::Lograge::RequestLogSubscriber.attach_to :grape
+    end
   end
 end
